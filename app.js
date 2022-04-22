@@ -1,34 +1,34 @@
-const inquirer = require('inquirer');
+const fs = require('fs');
+const math = require('./math');
 
-const profileDataArgs = process.argv.slice(2);
+console.log(math.add(4,9));
 
-const printProfileData = profileDataArr => {
-  // This...
-  for (let i = 0; i < profileDataArr.length; i += 1) {
-    console.log(profileDataArr[i]);
-  }
+const profileDataArgs = process.argv.slice(2, process.argv.length);
 
-  console.log('================');
+const [name, github] = profileDataArgs;
 
-  // Is the same as this...
-  profileDataArr.forEach(profileItem => console.log(profileItem));
+const generatePage = (name, github) => {
+  return `
+  <!DOCTYPE html> 
+  <html lang="en"> 
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Portfolio Demo</title>
+  </head>
+
+  <body>
+    <h1>${name}</h1>
+    <h2><a href="https://github.com/${github}">Github</a></h2>
+  </body>
+  </html>
+  `;
 };
 
-printProfileData(profileDataArgs);
+fs.writeFile('index.html', generatePage(name, github), err => {
+  if (err) throw err;
 
-inquirer
-  .prompt([
-    {
-      name: 'first_name',
-      type: 'input',
-      message: 'What is your first name?',
-    },
-    {
-      name: 'last_name',
-      type: 'input',
-      message: 'What is your last name?',
-    },
-  ])
-  .then((answers) => {
-    console.log('Hello ' + answers.first_name, answers.last_name);
-  });
+  console.log('Portfolio complete!  Check out index.html to see the output.');
+
+});
